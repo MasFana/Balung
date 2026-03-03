@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import idLocale from '@fullcalendar/core/locales/id';
 import { X, CheckCircle, Clock } from 'lucide-react';
 import LedgerDrawer from './LedgerDrawer';
 
@@ -36,6 +37,8 @@ export default function CalendarLedger({ initialEvents }: { initialEvents: any[]
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
+          locales={[idLocale]}
+          locale="id"
           events={initialEvents}
           eventClick={handleEventClick}
           dateClick={handleDateClick}
@@ -83,7 +86,7 @@ export default function CalendarLedger({ initialEvents }: { initialEvents: any[]
         className={`fixed top-0 right-0 h-full w-full sm:w-96 lg:w-[32rem] bg-white dark:bg-slate-900 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out border-l border-slate-200 dark:border-slate-800 flex flex-col ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="flex justify-between items-center p-4 border-b border-slate-100 dark:border-slate-800 shrink-0 mt-14 md:mt-0">
-          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Ledger Details</h2>
+          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Detail Pembelian</h2>
           <button 
             onClick={() => setIsDrawerOpen(false)}
             className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -96,7 +99,7 @@ export default function CalendarLedger({ initialEvents }: { initialEvents: any[]
           {selectedDate ? (
             <LedgerDrawer date={selectedDate} poId={selectedPoId} />
           ) : (
-            <div className="flex justify-center items-center h-full text-slate-500 dark:text-slate-400">Select a day or PO to view details</div>
+            <div className="flex justify-center items-center h-full text-slate-500 dark:text-slate-400">Pilih hari atau PO untuk melihat detail</div>
           )}
         </div>
       </div>

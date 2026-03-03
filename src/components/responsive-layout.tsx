@@ -30,9 +30,9 @@ export function ResponsiveLayout({ children }: { children: React.ReactNode }) {
   };
 
   const navItems = [
-    { name: "Calendar Ledger", href: "/", icon: Calendar },
-    { name: "Analytics Dashboard", href: "/analytics", icon: BarChart3 },
-    { name: "Master Data", href: "/master-data", icon: Database },
+    { name: "Kalender Pembelian (PO)", href: "/", icon: Calendar },
+    { name: "Dasbor Analitik", href: "/analytics", icon: BarChart3 },
+    { name: "Data Master", href: "/master-data", icon: Database },
   ];
 
   return (
@@ -129,7 +129,7 @@ export function ResponsiveLayout({ children }: { children: React.ReactNode }) {
               </div>
               <div className="flex flex-col">
                 <span className="text-sm font-medium text-slate-900 dark:text-slate-50 truncate w-32">
-                  Chief Nutritionist
+                  Kepala Ahli Gizi
                 </span>
                 <span className="text-xs text-slate-500 dark:text-slate-400">
                   Admin
@@ -143,7 +143,7 @@ export function ResponsiveLayout({ children }: { children: React.ReactNode }) {
               <button
                 onClick={toggleTheme}
                 className="p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hidden md:block"
-                title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                title={theme === "dark" ? "Beralih ke Mode Terang" : "Beralih ke Mode Gelap"}
               >
                 {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
@@ -151,7 +151,7 @@ export function ResponsiveLayout({ children }: { children: React.ReactNode }) {
           </div>
           <button className="flex w-full items-center px-2 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <LogOut className="w-5 h-5 md:mx-auto lg:mr-3 lg:mx-0" />
-            <span className="md:hidden lg:inline">Sign Out</span>
+            <span className="md:hidden lg:inline">Keluar</span>
           </button>
         </div>
       </aside>

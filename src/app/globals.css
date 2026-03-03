@@ -23,35 +23,52 @@ body {
 }
 
 /* FullCalendar Dark Mode Fixes */
+.dark .fc {
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: #1e293b;
+  --fc-neutral-text-color: #cbd5e1;
+  --fc-border-color: #334155;
+  --fc-button-text-color: #ffffff;
+  --fc-button-bg-color: #4f46e5;
+  --fc-button-border-color: #4f46e5;
+  --fc-button-hover-bg-color: #4338ca;
+  --fc-button-hover-border-color: #4338ca;
+  --fc-button-active-bg-color: #3730a3;
+  --fc-button-active-border-color: #3730a3;
+  --fc-event-bg-color: #3b82f6;
+  --fc-event-border-color: #3b82f6;
+  --fc-event-text-color: #ffffff;
+  --fc-today-bg-color: rgba(255, 255, 255, 0.05);
+  --fc-now-indicator-color: #ef4444;
+}
+
 .dark .fc-theme-standard td, 
 .dark .fc-theme-standard th, 
 .dark .fc-theme-standard .fc-scrollgrid {
-  border-color: #1e293b !important; /* slate-800 */
+  border-color: var(--fc-border-color) !important;
 }
 
-.dark .fc-col-header-cell-cushion {
-  color: #e2e8f0; /* slate-200 */
+.dark .fc .fc-col-header-cell-cushion,
+.dark .fc .fc-daygrid-day-number,
+.dark .fc .fc-list-day-text,
+.dark .fc .fc-list-day-side-text {
+  color: #e2e8f0 !important;
+  text-decoration: none;
 }
 
-.dark .fc-daygrid-day-number {
-  color: #94a3b8; /* slate-400 */
-}
-
-.dark .fc .fc-button-primary {
-  background-color: #4f46e5; /* indigo-600 */
-  border-color: #4f46e5;
-}
-
-.dark .fc .fc-button-primary:hover {
-  background-color: #4338ca; /* indigo-500 */
-  border-color: #4338ca;
-}
-
-.dark .fc .fc-button-primary:disabled {
-  background-color: #312e81; /* indigo-900 */
-  border-color: #312e81;
+.dark .fc .fc-col-header-cell-cushion:hover,
+.dark .fc .fc-daygrid-day-number:hover {
+  color: #ffffff !important;
 }
 
 .dark .fc-toolbar-title {
-  color: #f8fafc; /* slate-50 */
+  color: #f8fafc !important;
+}
+
+.dark .fc .fc-day-other .fc-daygrid-day-top {
+  opacity: 0.5;
+}
+
+.dark .fc .fc-daygrid-day.fc-day-today {
+  background-color: var(--fc-today-bg-color) !important;
 }

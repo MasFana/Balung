@@ -29,7 +29,7 @@ export default async function Home() {
 
   const censusEvents = Object.entries(dailyPatientCounts).map(([date, count]) => ({
     id: `census-${date}`,
-    title: `👥 ${count} Patients`,
+    title: `👥 ${count} Pasien`,
     date: date,
     extendedProps: {
       isCensus: true,
@@ -43,8 +43,8 @@ export default async function Home() {
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm p-4 md:p-6 border border-slate-200 dark:border-slate-800">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">Procurement Calendar</h1>
-        <p className="text-slate-500 dark:text-slate-400 text-sm">Manage Purchase Orders and Patient Census.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">Kalender Pengadaan</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm">Kelola Pesanan Pembelian (PO) dan Sensus Pasien.</p>
       </div>
       
       <CalendarLedger initialEvents={[...posEvents, ...censusEvents]} />

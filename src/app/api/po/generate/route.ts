@@ -8,12 +8,6 @@ export async function POST(request: Request) {
   try {
     const { targetDate } = await request.json();
 
-    // Check if PO already exists for this targetDate
-    const existingPo = await db.select().from(purchaseOrders).where(eq(purchaseOrders.targetDate, targetDate));
-    if (existingPo.length > 0) {
-      return NextResponse.json({ error: 'PO already exists for this date' }, { status: 400 });
-    }
-
     // Get patient census for targetDate
     const census = await db.select().from(patientCensus).where(eq(patientCensus.date, targetDate));
     if (census.length === 0) {
@@ -42,7 +36,7 @@ export async function POST(request: Request) {
           const current = ingredientRequirements.get(ing.id);
           ingredientRequirements.set(ing.id, {
             totalGrams: current.totalGrams + totalGramsForDiet,
-            price: ing.basePricePerKg,
+            price: current.price,
           });
         } else {
           ingredientRequirements.set(ing.id, {
@@ -53,26 +47,53 @@ export async function POST(request: Request) {
       }
     }
 
-    // Insert PO
-    const [insertedPo] = await db.insert(purchaseOrders).values({
-      poDate: format(new Date(), 'yyyy-MM-dd'),
-      targetDate: targetDate,
-      status: 'LOCKED',
-      totalCost: 0, // Will update shortly
-    }).returning();
+    // Check if PO already exists for this targetDate
+    const existingPoList = await db.select().from(purchaseOrders).where(eq(purchaseOrders.targetDate, targetDate));
+    
+    let poId;
+    let existingLineItems: any[] = [];
+    
+    if (existingPoList.length > 0) {
+      poId = existingPoList[0].id;
+      existingLineItems = await db.select().from(poLineItems).where(eq(poLineItems.poId, poId));
+      
+      // Delete old line items
+      await db.delete(poLineItems).where(eq(poLineItems.poId, poId));
+      
+      // Update PO status back to DRAFT just in case it was locked, though we remove strictly locked logic.
+      await db.update(purchaseOrders)
+        .set({ status: 'DRAFT' })
+        .where(eq(purchaseOrders.id, poId));
+    } else {
+      const [insertedPo] = await db.insert(purchaseOrders).values({
+        poDate: format(new Date(), 'yyyy-MM-dd'),
+        targetDate: targetDate,
+        status: 'DRAFT', // No longer immediately locked
+        totalCost: 0,
+      }).returning();
+      poId = insertedPo.id;
+    }
+
+    // Map existing snapshot prices
+    const existingPriceMap = new Map();
+    existingLineItems.forEach(item => {
+      existingPriceMap.set(item.ingredientId, item.snapshotPricePerKg);
+    });
 
     let totalCost = 0;
     const lineItemsData = [];
 
     for (const [ingredientId, data] of ingredientRequirements.entries()) {
       const theoreticalQty = data.totalGrams / 1000; // convert to kg
-      const actualQty = theoreticalQty; // For generation, actual = theoretical initially
-      const snapshotPrice = data.price;
+      const actualQty = theoreticalQty;
+      
+      // Keep previously edited snapshot_price if it existed
+      const snapshotPrice = existingPriceMap.has(ingredientId) ? existingPriceMap.get(ingredientId) : data.price;
       const lineCost = actualQty * snapshotPrice;
       totalCost += lineCost;
 
       lineItemsData.push({
-        poId: insertedPo.id,
+        poId: poId,
         ingredientId,
         theoreticalQty,
         actualQty,
@@ -86,9 +107,9 @@ export async function POST(request: Request) {
 
     await db.update(purchaseOrders)
       .set({ totalCost })
-      .where(eq(purchaseOrders.id, insertedPo.id));
+      .where(eq(purchaseOrders.id, poId));
 
-    return NextResponse.json({ success: true, poId: insertedPo.id });
+    return NextResponse.json({ success: true, poId: poId });
   } catch (error) {
     console.error('Error generating PO:', error);
     return NextResponse.json({ error: 'Failed to generate PO' }, { status: 500 });
